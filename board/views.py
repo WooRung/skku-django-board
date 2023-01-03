@@ -17,8 +17,8 @@ from datetime import datetime
 #         "name": "전인오", "is_active": True
 #     }]
 #     return render(request,
-#                   "board/index.html",
+#                   "board/index.back.html",
 #                   {"name": "신윤수", "now": now, "name_list": name_list})
 
 def index(request):
-    return render(request, 'board/layout1.back.html')
+    return render(request, 'board/layout1.html')
