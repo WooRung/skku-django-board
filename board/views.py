@@ -21,4 +21,4 @@ from datetime import datetime
 #                   {"name": "신윤수", "now": now, "name_list": name_list})
 
 def index(request):
-    return render(request, 'board/layout1.html')
+    return render(request, 'board/layout1.back.html')
