@@ -46,7 +46,7 @@
               {{ board.title }}
             </h5>
             <div class="">
-              {{ board.created_at|date:"Y.m.d h:m" }}
+              {{ board.created_at|date:"Y.m.d h:i:s" }}
             </div>
           </div>
 
@@ -69,7 +69,7 @@
               <div class="ms-2 me-auto">
                 {{ comment.content }}
               </div>
-              <span>{{ comment.created_at |date:"Y.m.d h:m" }}</span>
+              <span>{{ comment.created_at | date:"Y.m.d h:i:s" }}</span>
             </li>
           {% endfor %}
         </ul>
