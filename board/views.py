@@ -37,3 +37,10 @@ def board_detail(request, board_id):
     # 2. 127.0.0.1:8000/board/<int:board_id> 에 요청을 보내면 id에 맞는 게시글의 제목,
     # 내용이 나오도록 하여라.
     return render(request, "board/detail.html", {'board': board})
+
+
+def board_create(request):
+    print(request.POST)
+    print(request.POST['title'])
+    print(request.POST['content'])
+    return render(request, "board/create.html")

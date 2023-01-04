@@ -30,6 +30,10 @@
   </style>
 
   <div class="container mt-5">
+    <div class="mb-2 d-flex" style="flex-direction: row-reverse;">
+      <a href="{% url "board:create" %}" class="btn btn-outline-success">글 작성</a>
+    </div>
+
     <ol class="list-group row">
       {% for board in board_list %}
   {% comment %} 
