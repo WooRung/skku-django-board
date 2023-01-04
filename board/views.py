@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from datetime import datetime
+from .models import Board
 
 
 # 1. is_active = True인 사람만 html에서 rendering
@@ -21,4 +22,15 @@ from datetime import datetime
 #                   {"name": "신윤수", "now": now, "name_list": name_list})
 
 def index(request):
-    return render(request, 'board/index.html')
+    board_list = Board.objects.all()
+    return render(request,
+                  'board/index.html',
+                  {"board_list": board_list})
+
+
+def board_detail(request, board_id):
+    board = Board.objects.prefetch_related("comment_set").get(id=board_id)
+    # 1. board/templates/board/detail.html 만들어라.
+    # 2. 127.0.0.1:8000/board/<int:board_id> 에 요청을 보내면 id에 맞는 게시글의 제목,
+    # 내용이 나오도록 하여라.
+    return render(request, "board/detail.html", {'board': board})

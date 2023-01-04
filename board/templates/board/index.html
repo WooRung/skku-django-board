@@ -1,11 +1,54 @@
 {% extends "./layout1.html" %}
 {% block contents %}
-  <div class="container">
-    <div class="my-5">
-      <h2>게시글 목록</h2>
-    </div>
-  </div>
-  {# 1. /board 를 치면 index.html이 rendering되게 해주세요. #}
-  {# 2. index.html에서 저장된 Board의 제목과 작성시간이 보이도록 해주세요. #}
+  <style>
+    .list-group {
+      flex-direction: row;
+    }
 
+    .list-group-item:first-child {
+      border-top-left-radius: initial;
+      border-top-right-radius: initial;
+    }
+
+    .list-group-item+.list-group-item:nth-child(2) {
+      border-top-width: initial;
+    }
+
+    .list-group-item+.list-group-item:nth-child(2n) {
+      border-left: 0;
+    }
+
+    .list-a {
+      padding-left: 0;
+      padding-right: 0;
+      text-decoration: none;
+    }
+
+    .list-a:hover .list-group-item {
+      background-color: #e9e9e9;
+    }
+  </style>
+
+  <div class="container mt-5">
+    <ol class="list-group row">
+      {% for board in board_list %}
+        <a href="" class="list-a col-12 col-sm-6">
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ board.title }}</div>
+              {{ board.content|truncatechars:30 }}
+            </div>
+            <div style="flex-direction: column; display: flex">
+              <div>
+                <span class="badge bg-primary rounded-pill" style="float:right">{{ board.comment_set.count }}</span>
+              </div>
+              <span>{{ board.created_at|date:"Y.m.d" }}</span>
+
+            </div>
+          </li>
+        </a>
+      {% endfor %}
+    </ol>
+
+  </div>
 {% endblock %}
