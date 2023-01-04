@@ -1,7 +1,11 @@
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
 
 from datetime import datetime
+
+from django.urls import reverse
+
 from .models import Board
 
 
@@ -39,8 +43,18 @@ def board_detail(request, board_id):
     return render(request, "board/detail.html", {'board': board})
 
 
+from django.shortcuts import redirect
+from django.urls import reverse
+
+
 def board_create(request):
-    print(request.POST)
-    print(request.POST['title'])
-    print(request.POST['content'])
+    if request.method == "POST":
+        board = Board.objects.create(
+            title=request.POST['title'],
+            content=request.POST['content']
+        )
+        return redirect(reverse("board:index"))
+    # print(request.POST)
+    # print(request.POST['title'])
+    # print(request.POST['content'])
     return render(request, "board/create.html")
