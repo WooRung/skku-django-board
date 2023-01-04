@@ -1,0 +1,19 @@
+{% extends "./layout1.html" %}
+{% block contents %}
+  <div class="container">
+    <form action="{% url "board:create" %}" method="POST">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="title" class="form-label">제목</label>
+        <input type="text" name="title" class="form-control" id="title" placeholder="제목을 입력해주세요.">
+      </div>
+      <div class="mb-3">
+        <label for="content" class="form-label">본문</label>
+        <textarea class="form-control" name="content" id="content" rows="10"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-outline-success">글 작성</button>
+    </form>
+  </div>
+{% endblock %}

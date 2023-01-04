@@ -4,16 +4,22 @@
     <form action="{% url "board:create" %}" method="POST">
       {% csrf_token %}
 
-      <div class="mb-3">
-        <label for="title" class="form-label">제목</label>
-        <input type="text" name="title" class="form-control" id="title" placeholder="제목을 입력해주세요.">
-      </div>
-      <div class="mb-3">
-        <label for="content" class="form-label">본문</label>
-        <textarea class="form-control" name="content" id="content" rows="10"></textarea>
+      {% for field in form %}
+        <div class="fieldWrapper m-2">
+          {{ field.label_tag }}
+          {{ field }}
+          {% for error in field.errors %}
+            <div id="content-help" class="form-text text-danger">{{ field.errors }}</div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <div class="mb-3 p-3">
+        <div style="float:right">
+          <button type="submit" class="btn btn-outline-success">작성</button>
+        </div>
       </div>
 
-      <button type="submit" class="btn btn-outline-success">글 작성</button>
     </form>
   </div>
 {% endblock %}
