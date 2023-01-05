@@ -23,3 +23,15 @@ class BoardForm(forms.ModelForm):
        for visible in self.visible_fields():
            visible.field.widget.attrs['class'] = 'form-control'
 
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content', 'board']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': '댓글입력',
+                'rows': 3
+            }),
+            'board': forms.HiddenInput()
+        }

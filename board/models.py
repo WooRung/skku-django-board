@@ -12,6 +12,19 @@ class Board(models.Model):
     content = models.TextField("내용", validators=[validators.MinLengthValidator(10, "최소 10글자")])  # Text
     created_at = models.DateTimeField(auto_now_add=True)  # datetime
     updated_at = models.DateTimeField(auto_now=True)  #
+    deleted_at = models.DateTimeField(null=True)
+
+
+    def delete(self):
+        self.deleted_at = timezone.now()
+        return self.save()
+
+    def is_active(self):
+        return not bool(self.deleted_at)
+
+    @classmethod
+    def active_list(cls):
+        return cls.objects.filter(deleted_at__isnull=True)
 
 
 class Comment(models.Model):
