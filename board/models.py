@@ -1,6 +1,7 @@
 from django.db import models
 
 from django.core import validators
+from django.utils import timezone
 
 
 class Board(models.Model):
@@ -14,12 +15,16 @@ class Board(models.Model):
     updated_at = models.DateTimeField(auto_now=True)  #
     deleted_at = models.DateTimeField(null=True)
 
+    @classmethod
+    def get_active_board(cls):
+        return cls.objects.filter(deleted_at__isnull=True)
 
     def delete(self):
         self.deleted_at = timezone.now()
         return self.save()
 
     def is_active(self):
+        print(bool(self.deleted_at))
         return not bool(self.deleted_at)
 
     @classmethod

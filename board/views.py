@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.shortcuts import render, redirect
 
 from datetime import datetime
@@ -26,7 +26,7 @@ from .models import Board
 #                   {"name": "신윤수", "now": now, "name_list": name_list})
 
 def index(request):
-    board_list = Board.objects.all()
+    board_list = Board.get_active_board()
     return render(request,
                   'board/index.html',
                   {"board_list": board_list})
@@ -34,7 +34,7 @@ def index(request):
 
 def board_detail(request, board_id):
     try:
-        board = Board.objects.prefetch_related("comment_set").get(id=board_id)
+        board = Board.get_active_board().prefetch_related("comment_set").get(id=board_id)
     except Board.DoesNotExist as e:
         raise Http404("게시글이 없습니다.")
     # 1. board/templates/board/detail.html 만들어라.
@@ -46,7 +46,7 @@ def board_detail(request, board_id):
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from .forms import BoardForm
+from .forms import BoardForm, CommentForm
 
 
 def board_create(request):
@@ -61,10 +61,13 @@ def board_create(request):
                   "board/create.html",
                   {"form": form})
 
+
 def board_edit(request, board_id):
-    board = get_object_or_404(Board, id=board_id)
-    if not board.is_active():
-        raise Http404("게시물이 없습니다.")
+    # board = get_object_or_404(Board, id=board_id)
+    # if not board.is_active():
+    #     raise Http404("게시물이 없습니다.")
+    #### 위와 아래는 같습니다.
+    board = get_object_or_404(Board.get_active_board(), id=board_id)
 
     form = BoardForm({'title': board.title, 'content': board.content})
 
@@ -78,13 +81,16 @@ def board_edit(request, board_id):
             return redirect(reverse('board:detail', kwargs={'board_id': board.id}))
     return render(request, 'board/edit.html', {'form': form, 'board': board})
 
+
 def board_delete(request, board_id):
     board = get_object_or_404(Board, id=board_id)
     if not board.is_active():
+        print(board.is_active())
         raise Http404("게시물이 없습니다.")
 
-    board = board.delete()
-    return redirect(reverse('board:index', ))
+    board.delete()
+    return redirect(reverse('board:index'))
+
 
 def board_comment(request):
     if request.method == 'POST':
@@ -94,12 +100,3 @@ def board_comment(request):
             board = form.cleaned_data['board']
 
     return redirect(reverse('board:detail', kwargs=({'board_id': board.id})))
-
-    # if request.method == "POST":
-    #     board = Board.objects.create(
-    #         title=request.POST['title'],
-    #         content=request.POST['content']
-    #     )
-    #     return redirect(reverse("board:index"))
-    #
-    # return render(request, "board/create.back.html")
