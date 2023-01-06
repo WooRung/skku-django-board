@@ -11,11 +11,11 @@
 #         result += f"<li>{k}: {v}</li>"
 #     result += "</ul>"
 #     return HttpResponse(result)
-
 from django.http import HttpResponse
 from django.shortcuts import render
 
 from datetime import datetime
+from django.contrib.auth import authenticate
 
 
 # Create your views here.
