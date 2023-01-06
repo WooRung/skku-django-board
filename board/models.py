@@ -19,17 +19,19 @@ class Board(models.Model):
     def get_active_board(cls):
         return cls.objects.filter(deleted_at__isnull=True)
 
+    @classmethod
+    def active_list(cls):
+        return cls.objects.filter(deleted_at__isnull=True)
+
     def delete(self):
         self.deleted_at = timezone.now()
         return self.save()
 
     def is_active(self):
-        print(bool(self.deleted_at))
         return not bool(self.deleted_at)
 
-    @classmethod
-    def active_list(cls):
-        return cls.objects.filter(deleted_at__isnull=True)
+    def __str__(self):
+        return f"{self.pk} - {self.title}"
 
 
 class Comment(models.Model):

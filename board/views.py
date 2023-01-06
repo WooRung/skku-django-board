@@ -38,6 +38,7 @@ def board_detail(request, board_id):
         comment_form = CommentForm(initial={'board': board})
     except Board.DoesNotExist as e:
         raise Http404("게시글이 없습니다.")
+
     # 1. board/templates/board/detail.html 만들어라.
     # 2. 127.0.0.1:8000/board/<int:board_id> 에 요청을 보내면 id에 맞는 게시글의 제목,
     # 내용이 나오도록 하여라.
