@@ -1,8 +1,9 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import viewsets
 
 from .models import Students, Score
 from .serializers import StudentSerializer, ScoreSerializer
@@ -76,3 +77,56 @@ class ScoreView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#
+# class StudentViewSet(viewsets.ViewSet):
+#     def get_object(self, pk):
+#         return get_object_or_404(Students, pk=pk)
+#     def list(self, request):
+#         """get /students"""
+#         qs = Students.objects.all()
+#         serializer = StudentSerializer(qs, many=True)
+#         return Response(serializer.data)
+#
+#     def retrieve(self, request, pk):
+#         """get /students/<pk>"""
+#         qs = self.get_object(pk)
+#         serializer = StudentSerializer(qs)
+#         return Response(serializer.data)
+#
+#     def create(self, request):
+#         """post /students"""
+#         serializer = StudentSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#     def update(self, request, pk):
+#         """put /students/<pk>"""
+#         qs = self.get_object(pk)
+#         serializer = StudentSerializer(qs, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#     def destroy(self, request, pk):
+#         """delete /students/<pk>"""
+#         qs = self.get_object(pk)
+#         qs.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+from rest_framework.decorators import action
+
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Students.objects.prefetch_related('score_set').all()
+    serializer_class = StudentSerializer
+
+    @action(methods=['GET'], detail=False)
+    def seoul(self, request):
+        qs = self.get_queryset().filter(address="서울").all()
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
