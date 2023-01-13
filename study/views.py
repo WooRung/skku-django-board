@@ -4,8 +4,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Students
-from .serializers import StudentSerializer
+from .models import Students, Score
+from .serializers import StudentSerializer, ScoreSerializer
 
 
 # @api_view(['GET', 'POST'])
@@ -63,3 +63,16 @@ class StudentDetailView(APIView):
         qs.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class ScoreView(APIView):
+    def get(self, request):
+        qs = Score.objects.all()
+        serializer = ScoreSerializer(qs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = ScoreSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
